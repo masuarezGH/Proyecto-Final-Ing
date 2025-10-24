@@ -58,7 +58,7 @@ ecommerce-fakestore/
    npm install
 3. Ejecutar en modo desarrollo:
    ```bash
-    npx expo start
+   npx expo start
 4. Abrir en:
 
 * Expo Go (Android/iOS) escaneando el QR.
