@@ -43,7 +43,7 @@ export default function ProductDeleteScreen({ route, navigation }: Props) {
       } catch (e) {
         // ignore toast failures
       }
-      navigation.reset({ index: 0, routes: [{ name: "Products" } as any] });
+  navigation.reset({ index: 0, routes: [{ name: "Products", params: { message: "Producto borrado" } } as any] });
     } catch (error) {
       console.error("Error deleting product:", error);
       Alert.alert("Error", "No se pudo eliminar el producto. Intenta de nuevo.");
