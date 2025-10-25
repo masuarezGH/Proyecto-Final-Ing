@@ -1,5 +1,6 @@
 // src/components/ProductCard.tsx
-import { View, Text, Image, Pressable, Button, StyleSheet } from "react-native";
+import { View, Text, Image, Pressable, StyleSheet } from "react-native";
+import { Button } from "react-native-paper";
 import { product } from "../types/product";
 
 type Props = {
@@ -17,8 +18,12 @@ export default function ProductCard({ product, onPress, onEdit, onDelete }: Prop
         <Text numberOfLines={1} style={styles.title}>{product.title}</Text>
         <Text style={styles.price}>${product.price}</Text>
         <View style={{ flexDirection: "row", marginTop: 5 }}>
-          <Button title="Editar" onPress={onEdit} />
-          <Button title="Eliminar" color="red" onPress={onDelete} />
+          <Button mode="contained" onPress={onEdit}>
+            Editar
+          </Button>
+          <Button mode="contained" onPress={onDelete}>
+            Eliminar
+          </Button>
         </View>
       </View>
     </Pressable>
