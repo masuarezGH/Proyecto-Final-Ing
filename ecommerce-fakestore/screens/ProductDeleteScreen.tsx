@@ -35,26 +35,15 @@ export default function ProductDeleteScreen({ route, navigation }: Props) {
       console.log("typeof navigation.popToTop:", typeof navigation.popToTop);
       await deleteProduct(id);
       console.log("deleteProduct resolved for id=", id);
-      // On web Alert buttons may not be supported; use window.alert then reset
-      if (Platform.OS === "web") {
-        try {
-          // window.alert is synchronous on web; show then navigate
-          // eslint-disable-next-line no-alert
-          window.alert("Producto borrado correctamente");
-        } catch (e) {
-          console.log("window.alert error:", e);
+      // No confirmation: navigate straight back to Products after a successful delete.
+      try {
+        if (Platform.OS === "android") {
+          ToastAndroid.show("Producto borrado", ToastAndroid.SHORT);
         }
-        navigation.reset({ index: 0, routes: [{ name: "Products" } as any] });
-      } else {
-        // Show an alert for confirmation and force navigation to Products using reset
-        Alert.alert("Eliminado", "Producto borrado correctamente", [
-          {
-            text: "OK",
-            onPress: () =>
-              navigation.reset({ index: 0, routes: [{ name: "Products" } as any] }),
-          },
-        ]);
+      } catch (e) {
+        // ignore toast failures
       }
+      navigation.reset({ index: 0, routes: [{ name: "Products" } as any] });
     } catch (error) {
       console.error("Error deleting product:", error);
       Alert.alert("Error", "No se pudo eliminar el producto. Intenta de nuevo.");
