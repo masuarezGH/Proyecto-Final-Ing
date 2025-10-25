@@ -35,16 +35,17 @@ export default function ProductDeleteScreen({ route, navigation }: Props) {
       console.log("typeof navigation.popToTop:", typeof navigation.popToTop);
       await deleteProduct(id);
       console.log("deleteProduct resolved for id=", id);
-      // Show a platform-appropriate confirmation and navigate back to the list.
-      if (Platform.OS === "android") {
-        // Toast is less likely to be suppressed by navigation changes on Android
-        ToastAndroid.show("Producto borrado correctamente", ToastAndroid.SHORT);
-        navigation.popToTop();
-      } else {
-        Alert.alert("Eliminado", "Producto borrado correctamente", [
-          { text: "OK", onPress: () => navigation.popToTop() },
-        ]);
-      }
+      // Show an alert for confirmation and force navigation to Products using reset
+      Alert.alert("Eliminado", "Producto borrado correctamente", [
+        {
+          text: "OK",
+          onPress: () =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Products" } as any],
+            }),
+        },
+      ]);
     } catch (error) {
       console.error("Error deleting product:", error);
       Alert.alert("Error", "No se pudo eliminar el producto. Intenta de nuevo.");
