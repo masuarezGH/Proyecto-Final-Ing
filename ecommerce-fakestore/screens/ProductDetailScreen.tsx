@@ -30,7 +30,10 @@ export default function ProductDetailScreen({ route, navigation }: Props) {
         </Card.Content>
         <Card.Actions>
           <Button onPress={() => navigation.navigate("ProductEdit", { id })}>Editar</Button>
-          <Button textColor="red" onPress={() => navigation.navigate("ProductDelete", { id })}>
+          <Button
+            textColor="red"
+            onPress={() => navigation.navigate("ProductDelete", { id: Number(id) })}
+          >
             Eliminar
           </Button>
         </Card.Actions>

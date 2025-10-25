@@ -44,7 +44,7 @@ export default function ProductEditScreen({ route, navigation }: Props) {
         try {
           window.alert(msg);
         } catch (e) {
-          // fallback to Alert
+          // fallback to Alert  
           Alert.alert("Éxito", msg);
         }
         navigation.reset({ index: 0, routes: [{ name: "Products", params: { message: msg } }] });

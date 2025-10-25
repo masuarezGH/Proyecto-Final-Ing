@@ -30,7 +30,10 @@ export async function updateProduct(id: number, product: Partial<product>): Prom
   return res.json();
 }
 
-export async function deleteProduct(id: number): Promise<{ status: string }> {
+export async function deleteProduct(id: number) {
   const res = await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
+  if (!res.ok) {
+    throw new Error("Error al eliminar producto");
+  }
   return res.json();
 }
