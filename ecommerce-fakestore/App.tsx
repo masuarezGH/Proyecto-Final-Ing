@@ -1,6 +1,7 @@
 import React from "react";
 import { Provider as PaperProvider, MD3LightTheme } from "react-native-paper";
 import AppNavigator from "./navigation/AppNavigator";
+import { NotificationProvider } from "./contexts/NotificationContext";
 
 const theme = {
   ...MD3LightTheme,
@@ -14,7 +15,10 @@ const theme = {
 export default function App() {
   return (
     <PaperProvider theme={theme}>
-      <AppNavigator />
+      {/* Provider global para notificaciones (Snackbar) */}
+      <NotificationProvider>
+        <AppNavigator />
+      </NotificationProvider>
     </PaperProvider>
   );
 }

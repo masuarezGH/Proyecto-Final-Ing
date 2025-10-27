@@ -1,34 +1,19 @@
 // src/screens/ProductListScreen.tsx
+// Pantalla principal: lista de productos
+// Muestra los productos, permite navegar a detalle/editar/eliminar y agregar uno nuevo.
 import { useEffect, useState } from "react";
 import { FlatList } from "react-native";
-import { FAB, Card, Text, ActivityIndicator, Snackbar } from "react-native-paper";
+import { FAB, Card, Text, ActivityIndicator } from "react-native-paper";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
-import { getProducts } from "../api/products";
+import { useProducts } from "../hooks/useProducts";
 import { product } from "../types/product";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Products">;
 
 export default function ProductListScreen({ navigation, route }: Props) {
-  const [products, setProducts] = useState<product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [snackVisible, setSnackVisible] = useState(false);
-  const [snackMessage, setSnackMessage] = useState("");
-
-  useEffect(() => {
-    getProducts().then(setProducts).finally(() => setLoading(false));
-  }, []);
-
-  // Show a transient message when navigated here with a message param
-  useEffect(() => {
-    const msg = route.params && (route.params as any).message;
-    if (msg) {
-      setSnackMessage(String(msg));
-      setSnackVisible(true);
-      // clear the param so it doesn't show again on future navigations
-      navigation.setParams({ message: undefined } as any);
-    }
-  }, [route.params]);
+  // Usamos el hook reutilizable que encapsula la llamada a la API
+  const { products, loading, error, refetch } = useProducts();
 
 
   if (loading) return <ActivityIndicator animating={true} style={{ flex: 1 }} />;
@@ -60,9 +45,7 @@ export default function ProductListScreen({ navigation, route }: Props) {
         onPress={() => navigation.navigate("ProductAdd")}
         label="Agregar"
       />
-      <Snackbar visible={snackVisible} onDismiss={() => setSnackVisible(false)} duration={2000}>
-        {snackMessage}
-      </Snackbar>
+      {/* Las notificaciones globales las maneja NotificationProvider (Snackbar global). */}
     </>
   );
 }
