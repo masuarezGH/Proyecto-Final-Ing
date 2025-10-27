@@ -1,8 +1,11 @@
-// src/components/ProductForm.tsx
+// Componente de formulario reutilizable para crear/editar productos.
+// Usa Formik para gestionar estado del formulario y Yup para validación.
 import { View, TextInput, Button, Text, ActivityIndicator } from "react-native";
 import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 
+// Esquema de validación: se asegura que los campos requeridos estén completos
+// y que la URL de la imagen sea válida.
 const schema = Yup.object({
   title: Yup.string().required("Título requerido"),
   price: Yup.number().required("Precio requerido"),
@@ -31,21 +34,27 @@ export default function ProductForm({ initialValues, onSubmit, submitLabel = "Gu
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
       {({ values, handleChange, handleSubmit, errors, touched }) => (
         <View style={{ gap: 8 }}>
+          {/* Campo Título */}
           <TextInput placeholder="Título" value={values.title} onChangeText={handleChange("title")} />
           {touched.title && errors.title && <Text style={{ color: "red" }}>{errors.title}</Text>}
 
+          {/* Campo Precio (guardamos como string en el formulario) */}
           <TextInput placeholder="Precio" keyboardType="numeric" value={String(values.price)} onChangeText={handleChange("price")} />
           {touched.price && errors.price && <Text style={{ color: "red" }}>{errors.price}</Text>}
 
+          {/* Descripción larga */}
           <TextInput placeholder="Descripción" multiline value={values.description} onChangeText={handleChange("description")} />
           {touched.description && errors.description && <Text style={{ color: "red" }}>{errors.description}</Text>}
 
+          {/* Categoría del producto */}
           <TextInput placeholder="Categoría" value={values.category} onChangeText={handleChange("category")} />
           {touched.category && errors.category && <Text style={{ color: "red" }}>{errors.category}</Text>}
 
+          {/* URL de la imagen */}
           <TextInput placeholder="URL de imagen" value={values.image} onChangeText={handleChange("image")} />
           {touched.image && errors.image && <Text style={{ color: "red" }}>{errors.image}</Text>}
 
+          {/* Botón / indicador de envío */}
           {loading ? (
             <ActivityIndicator />
           ) : (

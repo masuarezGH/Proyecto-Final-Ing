@@ -1,4 +1,6 @@
 // src/screens/ProductListScreen.tsx
+// Pantalla principal: lista de productos
+// Muestra los productos, permite navegar a detalle/editar/eliminar y agregar uno nuevo.
 import { useEffect, useState } from "react";
 import { FlatList } from "react-native";
 import { FAB, Card, Text, ActivityIndicator, Snackbar } from "react-native-paper";
@@ -16,16 +18,20 @@ export default function ProductListScreen({ navigation, route }: Props) {
   const [snackMessage, setSnackMessage] = useState("");
 
   useEffect(() => {
+    // Cargar productos desde la API al montar la pantalla.
+    // getProducts devuelve una promesa con el array de productos.
     getProducts().then(setProducts).finally(() => setLoading(false));
   }, []);
 
   // Show a transient message when navigated here with a message param
   useEffect(() => {
+    // Si otra pantalla navegó aquí con un parámetro `message`, lo mostramos en un Snackbar.
+    // Esto permite feedback consistente tras operaciones (crear/editar/eliminar).
     const msg = route.params && (route.params as any).message;
     if (msg) {
       setSnackMessage(String(msg));
       setSnackVisible(true);
-      // clear the param so it doesn't show again on future navigations
+      // Limpiamos el parámetro para que no reaparezca en futuras navegaciones.
       navigation.setParams({ message: undefined } as any);
     }
   }, [route.params]);

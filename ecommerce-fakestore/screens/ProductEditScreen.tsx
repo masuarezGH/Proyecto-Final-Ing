@@ -1,4 +1,6 @@
 // src/screens/ProductEditScreen.tsx
+// Pantalla para editar un producto existente
+// Carga los valores iniciales, muestra el formulario y al guardar notifica y vuelve al listado.
 import { useEffect, useState } from "react";
 import { View, Alert, Platform, ToastAndroid } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -15,6 +17,7 @@ export default function ProductEditScreen({ route, navigation }: Props) {
   const [initialValues, setInitialValues] = useState<Values | null>(null);
 
   useEffect(() => {
+    // Al montar la pantalla traemos los datos del producto para rellenar el formulario.
     getProduct(id).then((p: product) =>
       setInitialValues({
         title: p.title,
@@ -27,31 +30,33 @@ export default function ProductEditScreen({ route, navigation }: Props) {
   }, [id]);
 
   async function handleSubmit(values: Values) {
+    // Al enviar los cambios llamamos a la API para actualizar el producto.
+    // Luego mostramos confirmación (toast/alert) y volvemos al listado pasando un `message`.
     try {
       await updateProduct(id, { ...values, price: Number(values.price) });
       const msg = `Producto actualizado`;
-      // Android quick toast (optional)
+      // Toast en Android para feedback rápido
       if (Platform.OS === "android") {
         try {
           ToastAndroid.show(msg, ToastAndroid.SHORT);
         } catch (e) {
-          // ignore
+          // ignorar si falla
         }
       }
 
-      // Web: window.alert is synchronous, show it then reset navigation
+      // En web usamos window.alert (sincronico) y después reiniciamos la navegación.
       if (Platform.OS === "web") {
         try {
           window.alert(msg);
         } catch (e) {
-          // fallback to Alert  
+          // Si no existe window.alert, fallback a Alert de react-native
           Alert.alert("Éxito", msg);
         }
         navigation.reset({ index: 0, routes: [{ name: "Products", params: { message: msg } }] });
         return;
       }
 
-      // Native: show an Alert with an OK button that resets to Products
+      // En nativo mostramos un Alert con botón OK que, al presionar, reinicia la navegación.
       Alert.alert("Éxito", msg, [
         {
           text: "OK",

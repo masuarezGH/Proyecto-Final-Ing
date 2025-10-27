@@ -1,4 +1,6 @@
 // src/screens/ProductDetailScreen.tsx
+// Pantalla de detalle de un producto
+// Muestra la información completa y ofrece acciones: editar o eliminar.
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 import { Card, Text, Button, ActivityIndicator } from "react-native-paper";
@@ -14,6 +16,7 @@ export default function ProductDetailScreen({ route, navigation }: Props) {
   const [product, setProduct] = useState<product | null>(null);
 
   useEffect(() => {
+    // Obtener el producto por ID desde la API y setear el estado local.
     getProduct(id).then(setProduct);
   }, [id]);
 
@@ -29,7 +32,9 @@ export default function ProductDetailScreen({ route, navigation }: Props) {
           <Text style={{ marginTop: 8, color: "gray" }}>{product.category}</Text>
         </Card.Content>
         <Card.Actions>
+          {/* Botón para ir a la pantalla de edición pasando el id del producto */}
           <Button onPress={() => navigation.navigate("ProductEdit", { id })}>Editar</Button>
+          {/* Botón para ir a la pantalla de eliminación (confirmación) */}
           <Button
             textColor="red"
             onPress={() => navigation.navigate("ProductDelete", { id: Number(id) })}
