@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 import { View, Alert, Platform, ToastAndroid } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
-import { getProduct, updateProduct } from "../api/products";
+import { updateProduct } from "../api/products";
+import { useNotification } from "../contexts/NotificationContext";
+import { useProduct } from "../hooks/useProduct";
 import ProductForm, { Values } from "../components/ProductForm";
 import { product } from "../types/product";
 import { ActivityIndicator } from "react-native-paper";
@@ -14,20 +16,19 @@ type Props = NativeStackScreenProps<RootStackParamList, "ProductEdit">;
 
 export default function ProductEditScreen({ route, navigation }: Props) {
   const { id } = route.params;
-  const [initialValues, setInitialValues] = useState<Values | null>(null);
+  // Usamos el hook reutilizable para cargar el producto
+  const { product, loading, error, refetch } = useProduct(id);
+  const initialValues: Values | null = product
+    ? {
+        title: product.title,
+        price: String(product.price),
+        description: product.description,
+        category: product.category,
+        image: product.image,
+      }
+    : null;
 
-  useEffect(() => {
-    // Al montar la pantalla traemos los datos del producto para rellenar el formulario.
-    getProduct(id).then((p: product) =>
-      setInitialValues({
-        title: p.title,
-        price: String(p.price),
-        description: p.description,
-        category: p.category,
-        image: p.image,
-      })
-    );
-  }, [id]);
+  const { notify } = useNotification();
 
   async function handleSubmit(values: Values) {
     // Al enviar los cambios llamamos a la API para actualizar el producto.
@@ -44,23 +45,26 @@ export default function ProductEditScreen({ route, navigation }: Props) {
         }
       }
 
-      // En web usamos window.alert (sincronico) y después reiniciamos la navegación.
+      // En web usamos window.alert (sincronico) y además notificamos globalmente.
       if (Platform.OS === "web") {
         try {
           window.alert(msg);
         } catch (e) {
-          // Si no existe window.alert, fallback a Alert de react-native
           Alert.alert("Éxito", msg);
         }
-        navigation.reset({ index: 0, routes: [{ name: "Products", params: { message: msg } }] });
+        notify(msg);
+        navigation.reset({ index: 0, routes: [{ name: "Products" }] });
         return;
       }
 
-      // En nativo mostramos un Alert con botón OK que, al presionar, reinicia la navegación.
+      // En nativo mostramos un Alert con botón OK que notifica y reinicia la navegación.
       Alert.alert("Éxito", msg, [
         {
           text: "OK",
-          onPress: () => navigation.reset({ index: 0, routes: [{ name: "Products", params: { message: msg } }] }),
+          onPress: () => {
+            notify(msg);
+            navigation.reset({ index: 0, routes: [{ name: "Products" }] });
+          },
         },
       ]);
     } catch (e: any) {
@@ -68,7 +72,7 @@ export default function ProductEditScreen({ route, navigation }: Props) {
     }
   }
 
-  if (!initialValues) return <ActivityIndicator animating style={{ flex: 1 }} />;
+  if (loading || !initialValues) return <ActivityIndicator animating style={{ flex: 1 }} />;
 
   return (
     <View style={{ padding: 16 }}>

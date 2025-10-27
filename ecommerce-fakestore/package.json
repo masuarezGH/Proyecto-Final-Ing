@@ -6,7 +6,9 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "lint": "eslint --ext .js,.ts,.tsx .",
+    "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""
   },
   "dependencies": {
     "@react-navigation/native": "^7.1.18",
@@ -27,7 +29,13 @@
   "devDependencies": {
     "@types/react": "~19.1.0",
     "@types/yup": "^0.29.14",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.3.0",
+    "eslint-plugin-react": "^7.33.3",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "prettier": "^3.12.1"
   },
   "private": true
 }

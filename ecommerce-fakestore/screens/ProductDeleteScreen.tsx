@@ -7,6 +7,8 @@ import { View, Alert, Platform, ToastAndroid } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { getProduct, deleteProduct } from "../api/products";
+import { useNotification } from "../contexts/NotificationContext";
+import { useProduct } from "../hooks/useProduct";
 import { product } from "../types/product";
 import { Card, Text, Button, ActivityIndicator } from "react-native-paper";
 
@@ -15,11 +17,14 @@ type Props = NativeStackScreenProps<RootStackParamList, "ProductDelete">;
 export default function ProductDeleteScreen({ route, navigation }: Props) {
   const { id } = route.params;
   const [product, setProduct] = useState<product | null>(null);
+  const { notify } = useNotification();
+
+  // Usamos el hook reutilizable para obtener el producto por id
+  const { product: fetchedProduct, loading, error, refetch } = useProduct(id);
 
   useEffect(() => {
-    // Obtener el producto a eliminar por ID y guardarlo en el estado local.
-    getProduct(id).then(setProduct);
-  }, [id]);
+    setProduct(fetchedProduct ?? null);
+  }, [fetchedProduct]);
 
   async function handleDelete() {
     // Función que ejecuta la llamada a la API para eliminar el producto.
@@ -45,7 +50,7 @@ export default function ProductDeleteScreen({ route, navigation }: Props) {
       console.log("deleteProduct resolved for id=", id);
 
       // Feedback: en Android mostramos un Toast nativo; en cualquier caso reiniciamos
-      // la pila de navegación hacia la lista y pasamos `message` para el Snackbar.
+      // la pila de navegación hacia la lista y usamos notify para el Snackbar global.
       try {
         if (Platform.OS === "android") {
           ToastAndroid.show("Producto borrado", ToastAndroid.SHORT);
@@ -54,7 +59,9 @@ export default function ProductDeleteScreen({ route, navigation }: Props) {
         // ignorar si falla el Toast
       }
 
-      navigation.reset({ index: 0, routes: [{ name: "Products", params: { message: "Producto borrado" } } as any] });
+      // Notificamos globalmente y navegamos al listado.
+      notify("Producto borrado");
+      navigation.reset({ index: 0, routes: [{ name: "Products" } as any] });
     } catch (error) {
       // Manejo de error: log y alerta al usuario
       console.error("Error deleting product:", error);

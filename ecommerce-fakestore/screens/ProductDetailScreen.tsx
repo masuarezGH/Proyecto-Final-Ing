@@ -6,21 +6,17 @@ import { ScrollView } from "react-native";
 import { Card, Text, Button, ActivityIndicator } from "react-native-paper";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
-import { getProduct } from "../api/products";
 import { product } from "../types/product";
+import { useProduct } from "../hooks/useProduct";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProductDetail">;
 
 export default function ProductDetailScreen({ route, navigation }: Props) {
   const { id } = route.params;
-  const [product, setProduct] = useState<product | null>(null);
+  // Usamos el hook reutilizable para obtener el producto por id
+  const { product, loading, error } = useProduct(id);
 
-  useEffect(() => {
-    // Obtener el producto por ID desde la API y setear el estado local.
-    getProduct(id).then(setProduct);
-  }, [id]);
-
-  if (!product) return <ActivityIndicator animating style={{ flex: 1 }} />;
+  if (loading || !product) return <ActivityIndicator animating style={{ flex: 1 }} />;
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16 }}>

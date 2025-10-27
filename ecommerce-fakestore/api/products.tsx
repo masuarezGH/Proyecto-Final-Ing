@@ -7,23 +7,25 @@ const BASE_URL = "https://fakestoreapi.com/products";
 // Devuelve la lista completa de productos.
 export async function getProducts(): Promise<product[]> {
   const res = await fetch(BASE_URL);
-  // No hacemos manejo avanzado de errores aquí; el consumidor puede catchear la promesa.
+  if (!res.ok) throw new Error(`Error fetching products: ${res.status} ${res.statusText}`);
   return res.json();
 }
 
 // Devuelve un producto por su id.
 export async function getProduct(id: number): Promise<product> {
   const res = await fetch(`${BASE_URL}/${id}`);
+  if (!res.ok) throw new Error(`Product ${id} not found: ${res.status}`);
   return res.json();
 }
 
-// Crea un producto. Recibe un objeto sin `id` y devuelve el producto creado con su id.
-export async function createProduct(product: Omit<product, "id">): Promise<product> {
+// Agrega un producto. Recibe un objeto sin `id` y devuelve el producto agregado con su id.
+export async function addProduct(product: Omit<product, "id">): Promise<product> {
   const res = await fetch(BASE_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(product),
   });
+  if (!res.ok) throw new Error(`Error creating product: ${res.status} ${res.statusText}`);
   return res.json();
 }
 
@@ -34,6 +36,7 @@ export async function updateProduct(id: number, product: Partial<product>): Prom
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(product),
   });
+  if (!res.ok) throw new Error(`Error updating product ${id}: ${res.status} ${res.statusText}`);
   return res.json();
 }
 

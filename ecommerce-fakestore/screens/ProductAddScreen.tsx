@@ -5,13 +5,15 @@ import { useState } from "react";
 import { View, Alert, Platform, ToastAndroid } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
-import { createProduct } from "../api/products";
+import { addProduct } from "../api/products";
+import { useNotification } from "../contexts/NotificationContext";
 import ProductForm, { Values } from "../components/ProductForm";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProductAdd">;
 
 export default function ProductAddScreen({ navigation }: Props) {
   const [loading, setLoading] = useState(false);
+  const { notify } = useNotification();
 
   const initialValues: Values = {
     title: "",
@@ -28,8 +30,8 @@ export default function ProductAddScreen({ navigation }: Props) {
     try {
       setLoading(true);
       const payload = { ...values, price: Number(values.price) };
-      const created = await createProduct(payload);
-      const msg = `Producto agregado con ID ${created.id}`;
+  const created = await addProduct(payload);
+  const msg = `Producto agregado con ID ${created.id}`;
       // En Android mostramos un Toast nativo (opcional) para feedback rápido.
       if (Platform.OS === "android") {
         try {
@@ -38,8 +40,9 @@ export default function ProductAddScreen({ navigation }: Props) {
           // Si falla ToastAndroid, no interrumpimos el flujo.
         }
       }
-      // Reiniciamos la pila de navegación y pasamos el mensaje como parámetro.
-      navigation.reset({ index: 0, routes: [{ name: "Products", params: { message: msg } }] });
+  // Notificamos globalmente y reiniciamos la pila hacia Products.
+  notify(msg);
+  navigation.reset({ index: 0, routes: [{ name: "Products" }] });
     } catch (e: any) {
       // Mostrar error genérico en caso de fallo de la API.
       Alert.alert("Error", e.message);

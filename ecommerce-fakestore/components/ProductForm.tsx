@@ -1,6 +1,7 @@
 // Componente de formulario reutilizable para crear/editar productos.
 // Usa Formik para gestionar estado del formulario y Yup para validación.
-import { View, TextInput, Button, Text, ActivityIndicator } from "react-native";
+import { View, Text } from "react-native";
+import { TextInput, Button, ActivityIndicator } from "react-native-paper";
 import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 
@@ -35,30 +36,32 @@ export default function ProductForm({ initialValues, onSubmit, submitLabel = "Gu
       {({ values, handleChange, handleSubmit, errors, touched }) => (
         <View style={{ gap: 8 }}>
           {/* Campo Título */}
-          <TextInput placeholder="Título" value={values.title} onChangeText={handleChange("title")} />
+            <TextInput label="Título" value={values.title} onChangeText={handleChange("title")} />
           {touched.title && errors.title && <Text style={{ color: "red" }}>{errors.title}</Text>}
 
           {/* Campo Precio (guardamos como string en el formulario) */}
-          <TextInput placeholder="Precio" keyboardType="numeric" value={String(values.price)} onChangeText={handleChange("price")} />
+            <TextInput label="Precio" keyboardType="numeric" value={String(values.price)} onChangeText={handleChange("price")} />
           {touched.price && errors.price && <Text style={{ color: "red" }}>{errors.price}</Text>}
 
           {/* Descripción larga */}
-          <TextInput placeholder="Descripción" multiline value={values.description} onChangeText={handleChange("description")} />
+            <TextInput label="Descripción" multiline value={values.description} onChangeText={handleChange("description")} />
           {touched.description && errors.description && <Text style={{ color: "red" }}>{errors.description}</Text>}
 
           {/* Categoría del producto */}
-          <TextInput placeholder="Categoría" value={values.category} onChangeText={handleChange("category")} />
+            <TextInput label="Categoría" value={values.category} onChangeText={handleChange("category")} />
           {touched.category && errors.category && <Text style={{ color: "red" }}>{errors.category}</Text>}
 
           {/* URL de la imagen */}
-          <TextInput placeholder="URL de imagen" value={values.image} onChangeText={handleChange("image")} />
+            <TextInput label="URL de imagen" value={values.image} onChangeText={handleChange("image")} />
           {touched.image && errors.image && <Text style={{ color: "red" }}>{errors.image}</Text>}
 
           {/* Botón / indicador de envío */}
           {loading ? (
             <ActivityIndicator />
           ) : (
-            <Button title={submitLabel} onPress={() => handleSubmit()} />
+              <Button mode="contained" onPress={() => handleSubmit()}>
+                {submitLabel}
+              </Button>
           )}
         </View>
       )}
