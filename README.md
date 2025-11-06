@@ -92,7 +92,7 @@ commerce-fakestore/
 ---
 
 ## 🔗 API utilizada
-* [FakeStoreAPI](https://copilot.microsoft.com/chats/mdoTr7t6QGPVe2R3AWFkU)
+* [FakeStoreAPI](https://fakestoreapi.com/docs#tag/Products)
 * Endpoints principales:
 
   ```http
