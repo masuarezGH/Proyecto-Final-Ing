@@ -19,20 +19,29 @@ Consume la [FakeStoreAPI](https://fakestoreapi.com/docs#tag/Products) para simul
 
 ## 📂 Estructura del proyecto
 ```
-ecommerce-fakestore/
- ├─ api/              # Servicios de API (fetch/axios)
- │   └─ products.ts
- ├─ components/       # Componentes reutilizables (ProductForm, ProductCard, etc.)
- ├─ navigation/       # Configuración de navegación
- │   └─ AppNavigator.tsx
- ├─ screens/          # Pantallas principales
- │   ├─ ProductListScreen.tsx
- │   ├─ ProductDetailScreen.tsx
- │   ├─ ProductAddScreen.tsx
- │   ├─ ProductEditScreen.tsx
- │   └─ ProductDeleteScreen.tsx
- └─ types/            # Tipos TypeScript
-     └─ product.ts
+commerce-fakestore/
+├── api/                # Servicios de API (fetch/axios)
+│   └── products.ts
+├── assets/             # Imágenes, íconos y recursos estáticos
+├── components/         # Componentes reutilizables
+    └── ProductCard.txs
+    └── ProductForm.tsx
+├── context/            # Contextos globales (ej: NotificationContext)
+│   └── NotificationContext.tsx
+├── hooks/              # Custom hooks para lógica reutilizable
+│   ├── useProduct.ts
+│   └── useProducts.ts
+├── navigation/         # Configuración de navegación
+│   └── AppNavigator.tsx
+ ├── screens/            # Pantallas principales del flujo
+│   ├── ProductListScreen.tsx
+│   ├── ProductDetailScreen.tsx
+│   ├── ProductAddScreen.tsx
+│   ├── ProductEditScreen.tsx
+│   └── ProductDeleteScreen.tsx
+├── types/              # Tipos TypeScript
+│   └── product.ts
+├── App.js              # Punto de entrada principal
 ```
 
 ---
